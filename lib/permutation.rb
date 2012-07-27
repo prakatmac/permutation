@@ -45,6 +45,49 @@ class Permutation
     perm.instance_variable_set(:@collection, collection)
     perm
   end
+  
+  # Builds a permutation that maps <code>initial</code> into 
+  # <code>final</code>.  Both arguments must be the same length and 
+  # must contain the same elements.  If these arrays contain duplicate 
+  # elements, the solution will not be unique.
+  def self.for_mapping(initial, final)
+    raise(ArgumentError, "Initial and final lists must be the same length") unless(initial.length == final.length)
+    
+    # build LUT
+    lut = Hash.new {|h,k| h[k] = Array.new}
+    initial.each_with_index do |e, index|
+      lut[e] = lut[e].push(index);
+    end
+    
+    # generate permutation list  
+    perm_list = final.map { |e| lut[e].pop }
+    return(Permutation.from_value(perm_list))
+  end
+  
+  # Shortcut to generate the identity permutation that has 
+  # Permutation#size <code>n</code> 
+  def self.identity(n)
+    return(Permutation.new(n,0))
+  end
+
+# Returns the identity permutation that has the same Permutation#size as this instance
+  def identity
+    # the 0 rank permutation is the identity
+    return(Permutation.identity(self.size))
+  end
+  
+  # Computes the nth power (ie the nth repeated permutation) of this 
+  # instance.  Negative powers are taken to be powers of the inverse.  
+  def power(n)
+    raise(ArgumentError, "Can only take integer powers of Permutation instances") unless n.is_a?(Integer)
+    if(n >= 0)
+      (1..n).inject(self.identity) {|s,e| s * self}
+    elsif(n < 0) # negative powers are taken to be powers of the inverse
+      -self.power(-n)
+    end
+  end
+  alias :^ :power
+
 
   # Returns the size of this permutation, a Fixnum.
   attr_reader :size
