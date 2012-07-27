@@ -263,7 +263,7 @@ class TC_Permutation < Test::Unit::TestCase
     # basic
     a0 = (0..99).to_a
     b0 = a0.shuffle
-    ref = Permutation.from_value(b0)
+    ref = Permutation.from_value(b0.dup) # something about from_value clobbers b0
     assert_equal(Permutation.for_mapping(a0, b0), ref)
     # random
     a1 = ("A".."Z").to_a

@@ -60,7 +60,7 @@ class Permutation
     end
 
     # generate permutation list  
-    perm_list = b.map { |e| puts e; lut[e].pop }
+    perm_list = b.map { |e| lut[e].pop }
     return(Permutation.from_value(perm_list))
   end
   
