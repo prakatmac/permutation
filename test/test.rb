@@ -249,4 +249,45 @@ class TC_Permutation < Test::Unit::TestCase
                    perm.map { |p| p.odd? })
     end
   end
+
+  def test_identity
+    a = ("A".."Z").to_a
+    b = a.shuffle
+    p = Permutation.for_mapping(a, b)
+    assert_equal(Permutation.identity(p.size), Permutation.from_value((0..25).to_a))
+    assert_equal(Permutation.identity(p.size), p.identity)
+    assert_equal(p * -p, p.identity)
+  end
+
+  def test_for_mapping
+    # basic
+    a0 = (0..99).to_a
+    b0 = a0.shuffle
+    ref = Permutation.from_value(b0)
+    assert_equal(Permutation.for_mapping(a0, b0), ref)
+    # random
+    a1 = ("A".."Z").to_a
+    b1 = a1.shuffle
+    p = Permutation.for_mapping(a1, b1)
+    assert_equal(p.project(a1), b1)
+    # duplicate elements
+    3.times { a1.push("Z") }
+    b1 = a1.shuffle
+    p = Permutation.for_mapping(a1, b1)
+    assert_equal(p.project(a1), b1)
+    # random objects
+    a2 = [Array.new, Hash.new, nil, 0]
+    b2 = [Hash.new, nil, Array.new, 0]
+    p = Permutation.for_mapping(a2, b2)
+    assert_equal(p.value, [1, 2, 0, 3])
+  end
+
+  def test_power
+    p = Permutation.new(100).random
+    assert_equal(p^2, p*p)
+    assert_equal(p^3, p*p*p)
+    assert_equal(p^4, p*p*p*p)
+    assert_equal(p^-1, -p)
+    assert_equal(p^-2, -p * -p)
+  end
 end

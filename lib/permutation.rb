@@ -46,21 +46,21 @@ class Permutation
     perm
   end
   
-  # Builds a permutation that maps <code>initial</code> into 
-  # <code>final</code>.  Both arguments must be the same length and 
+  # Builds a permutation that maps <code>before</code> into 
+  # <code>after</code>.  Both arguments must be the same length and 
   # must contain the same elements.  If these arrays contain duplicate 
   # elements, the solution will not be unique.
-  def self.for_mapping(initial, final)
-    raise(ArgumentError, "Initial and final lists must be the same length") unless(initial.length == final.length)
+  def self.for_mapping(before, after)
+    raise(ArgumentError, "Initial and final lists must be the same length") unless(before.length == after.length)
     
     # build LUT
     lut = Hash.new {|h,k| h[k] = Array.new}
-    initial.each_with_index do |e, index|
+    before.each_with_index do |e, index|
       lut[e] = lut[e].push(index);
     end
-    
+
     # generate permutation list  
-    perm_list = final.map { |e| lut[e].pop }
+    perm_list = after.map { |e| lut[e].pop }
     return(Permutation.from_value(perm_list))
   end
   
