@@ -357,7 +357,8 @@ class Permutation
     @@fcache[n]
   end
 
-  def rank_indices(p)
+  def rank_indices(ind)
+    p = ind.dup # modified to work with a copy
     result = 0
     for i in 0...size
       result += p[i] * factorial(size - i - 1)
